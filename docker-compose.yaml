@@ -4,6 +4,10 @@ services:
 
   proxy:
     privileged: true
+    ulimits:
+      core:
+        soft: -1
+        hard: -1
     build:
       context: .
       dockerfile: Dockerfile-proxy
@@ -16,6 +20,9 @@ services:
       - type: bind
         source: ./proxy_results
         target: /results
+    labels:
+      org.my-test.role: "proxy"
+      org.my-test.filter: "postgresql"
 
   postgres:
     image: postgres:latest
@@ -29,6 +36,9 @@ services:
       #          https://www.postgresql.org/docs/current/auth-trust.html
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_DB: ${SYSBENCH_DB_NAME}
+    labels:
+      org.my-test.role: "database"
+      org.my-test.filter: "postgresql"
 
 networks:
   envoymesh:
