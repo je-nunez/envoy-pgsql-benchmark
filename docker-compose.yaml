@@ -3,8 +3,14 @@ version: "3.7"
 services:
 
   proxy:
-    privileged: true
+    security_opt:
+      - seccomp:"./allow_perf_event_open_seccomp.json"
+    cap_drop:
+      - ALL
     ulimits:
+      memlock:
+        soft: -1
+        hard: -1
       core:
         soft: -1
         hard: -1
@@ -43,4 +49,3 @@ services:
 networks:
   envoymesh:
     name: envoymesh
-
